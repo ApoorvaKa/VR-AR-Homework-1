@@ -51,7 +51,7 @@ rotation2 = np.array([[1, 0, 0, 0],
                         [0, 0, 0, 1]], dtype=np.float32)
 
 # composite them into a single transformation matrix, i.e., the camera transformation matrix.
-current_camera_transformation = np.matmul(np.matmul(rotation1, translation), rotation2)
+current_camera_transformation = np.matmul(np.matmul(rotation2, translation), rotation1)
 
 # Debugs for the camera transformation matrix step 1
 print("Initial camera transformation matrix:")
@@ -69,8 +69,13 @@ print(current_camera_transformation)
 object_position_world = np.array([2, 3, 4], dtype=np.float32)
 
 # TODO: compute the object's position in the camera space using the camera transformation matrix.
-object_position_camera = np.matmul(current_camera_transformation, np.append(object_position_world, 1))
+# Go backward through the transformation inverting each of them
+composite_object_transformation = np.linalg.inv(current_camera_transformation)
+object_position_camera = np.matmul(composite_object_transformation, np.append(object_position_world, 1))
 object_position_camera = object_position_camera[:3]
+# print("Object position in the world space:")
+# print(object_position_world)
+print("Object Position in the camera space:")
 print(object_position_camera)
 
 #object_position_camera = None
